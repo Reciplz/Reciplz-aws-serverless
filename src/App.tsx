@@ -1,24 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
+import {Switch, Route, Link} from 'react-router-dom'
+
+import Amplify from 'aws-amplify'
+import config from './aws-exports'
+import { AmplifyAuthenticator, AmplifySignIn, AmplifySignOut } from '@aws-amplify/ui-react';
+
+import Splash from './views/Splash';
+import Dashboard from './views/Dashboard';
+
 import './App.css';
+
+Amplify.configure(config)
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <Route exact path='/'>
+          <Splash />
+        </Route>
+        <AmplifyAuthenticator >
+        <nav className="flex justify-end items-center bg-black">
+            <Link to="/dashboard" className="text-white mx-4 hover:text-yellow-500">Dash</Link>
+            <AmplifySignOut />
+          </nav>
+        <Route path='/dashboard'>
+          <Dashboard />
+        </Route>
+        </AmplifyAuthenticator>
+      </Switch>
     </div>
   );
 }
